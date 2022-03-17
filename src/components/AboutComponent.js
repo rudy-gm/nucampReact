@@ -11,12 +11,11 @@ import { Link } from "react-router-dom";
 
 function About(props) {
   const partners = props.partners.map((partner) => {
-    return <Media tag='li' key={partner.id}>
-
-        {RenderPartner({partner})}
-
-
-    </Media>;
+    return (
+      <Media tag="li" key={partner.id}>
+        <RenderPartner partner={partner} />
+      </Media>
+    );
   });
 
   return (
@@ -96,29 +95,26 @@ function About(props) {
   );
 }
 
-const RenderPartner = ({partner}) => {
+const RenderPartner = ({ partner }) => {
   if (partner) {
-        return (
-        <React.Fragment>
-            <Media
-            object
-            src={partner.image}
-            alt={partner.name}
-            width="150"
-            ></Media>
-            <Media body className="ml-5 mb-4">
-            <Media heading>{partner.name}</Media>
+    return (
+      <React.Fragment>
+        <Media
+          object
+          src={partner.image}
+          alt={partner.name}
+          width="150"
+        ></Media>
+        <Media body className="ml-5 mb-4">
+          <Media heading>{partner.name}</Media>
 
-            {partner.description}
-            </Media>
-        </React.Fragment>
-        );
-    }
-
-    else{
-
-        return <div>False</div>
-    }
+          {partner.description}
+        </Media>
+      </React.Fragment>
+    );
+  } else {
+    return <div>False</div>;
+  }
 };
 
 export default About;
