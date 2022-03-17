@@ -7,6 +7,14 @@ import {
   Collapse,
   Jumbotron,
   NavItem,
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Form,
+  FormGroup,
+  Input,
+  Label,
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 
@@ -14,10 +22,14 @@ class Header extends Component {
   constructor(props) {
     super(props);
 
-    this.toggleNav = this.toggleNav.bind(this);
     this.state = {
       isNavOpen: false,
+      isModalOpen: false,
     };
+
+    this.toggleNav = this.toggleNav.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
   toggleNav() {
@@ -26,9 +38,59 @@ class Header extends Component {
     });
   }
 
+  toggleModal() {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen,
+    });
+  }
+
+  handleLogin(event) {
+    alert(`username: ${this.username.value}, password: ${this.password.value}, Remember: ${this.remember.checked} `);
+    this.toggleModal();
+    event.preventDefault();
+  }
+
   render() {
     return (
       <React.Fragment>
+        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+          <ModalHeader toggle={this.toggleModal}>Log-In</ModalHeader>
+          <ModalBody>
+            <Form onSubmit={this.handleLogin}>
+              <FormGroup>
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  type="text"
+                  id="username"
+                  name="username"
+                  innerRef={(input) => (this.username = input)}
+                ></Input>
+              </FormGroup>
+
+              <FormGroup>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  type="password"
+                  id="password"
+                  name="password"
+                  innerRef={(input) => (this.password = input)}
+                ></Input>
+              </FormGroup>
+              <FormGroup check>
+                <Label check>
+                  <Input
+                    type="checkbox"
+                    name="remember"
+                    innerRef={(input) => (this.remember = input)}
+                  />
+                  Remember me
+                </Label>
+              </FormGroup>
+
+              <Button type='submit' value='submit' color='primary'>Log-In</Button>
+            </Form>
+          </ModalBody>
+        </Modal>
         <Jumbotron fluid>
           <div className="container">
             <div className="row">
@@ -58,21 +120,20 @@ class Header extends Component {
             <NavbarToggler onClick={this.toggleNav}></NavbarToggler>
             <Collapse isOpen={this.state.isNavOpen} navbar>
               <Nav navbar>
-
                 <NavItem>
                   <NavLink className="nav-link" to="/home">
                     <i className="fa fa-home fa-lg" /> Home
                   </NavLink>
                 </NavItem>
 
-               <NavItem>
-                 <NavLink className='nav-link' to='/directory'>
-                   <i className="fa fa-list fa-lg"></i> Directory
-                 </NavLink>
-               </NavItem>
+                <NavItem>
+                  <NavLink className="nav-link" to="/directory">
+                    <i className="fa fa-list fa-lg"></i> Directory
+                  </NavLink>
+                </NavItem>
                 <NavItem>
                   <NavLink className="nav-link" to="/aboutus">
-                    <i className="fa fa-info fa-lg"></i> About 
+                    <i className="fa fa-info fa-lg"></i> About
                   </NavLink>
                 </NavItem>
                 <NavItem>
@@ -81,6 +142,12 @@ class Header extends Component {
                   </NavLink>
                 </NavItem>
               </Nav>
+
+              <span className="navbar-text ml-auto">
+                <Button outline onClick={this.toggleModal}>
+                  <i className="fa fa-sign-in fa-lg"></i> Log-In
+                </Button>
+              </span>
             </Collapse>
           </div>
         </Navbar>
