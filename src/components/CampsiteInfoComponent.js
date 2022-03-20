@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import {
   Card,
   CardImg,
@@ -6,10 +6,30 @@ import {
   CardBody,
   Breadcrumb,
   BreadcrumbItem,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Label,
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import ReturnArrow from "./ReturnArrowComponent";
 import NextArrow from "./NextArrow";
+import { LocalForm, Control, Errors } from "react-redux-form";
+
+const minLength = (amount) => (value) => {
+  return value && value.length >= amount;
+};
+
+const maxLength = (amount) => (value) => {
+
+  return value && value.length <= amount
+}
+
+const required = (value) =>{
+
+  return value;
+}
 
 function RenderCampsite({ campsite }) {
   return (
@@ -39,13 +59,21 @@ function RenderComments({ comments }) {
                 month: "short",
                 day: "2-digit",
               }).format(new Date(Date.parse(singleComment.date)))}
+              
+              <br></br>
+              <br></br>
             </div>
           );
         })}
+        <CommentForm></CommentForm>
       </div>
     );
   } else {
-    return <div></div>;
+    return (
+      <div>
+        <CommentForm></CommentForm>
+      </div>
+    );
   }
 }
 
@@ -57,7 +85,9 @@ function CampsiteInfo(props) {
         <div className="row">
           <div className="col">
             <Breadcrumb>
-            <BreadcrumbItem><Link to='/home'>Home</Link></BreadcrumbItem>
+              <BreadcrumbItem>
+                <Link to="/home">Home</Link>
+              </BreadcrumbItem>
               <BreadcrumbItem>
                 <Link to="/directory">Directory</Link>
               </BreadcrumbItem>
@@ -77,6 +107,109 @@ function CampsiteInfo(props) {
     );
   } else {
     return <div></div>;
+  }
+}
+
+class CommentForm extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isModalOpen: false,
+    };
+  }
+
+  toggleModal = () => {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen,
+    });
+  };
+
+  handleSubmit = (values) => {
+    alert(JSON.stringify(values));
+  };
+
+  render() {
+    return (
+      <div>
+        <Button outline onClick={this.toggleModal}>
+          <i className="fa fa-pencil fa-lg"></i>
+          Submit Comment
+        </Button>
+
+        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+          <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+          <ModalBody>
+            <LocalForm onSubmit={this.handleSubmit}>
+              <div className="form-group">
+                <Label htmlFor="author">Author</Label>
+
+                <Control.select
+                  model=".rating"
+                  name="rating"
+                  id="rating"
+                  placeholder="Your Name"
+                  className="form-control"
+                  defaultValue={1}
+                >
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </Control.select>
+              </div>
+
+              <div className="form-group">
+                <Label htmlFor="author">Author</Label>
+
+                <Control.text
+                  model=".author"
+                  name="author"
+                  id="author"
+                  placeholder="Your Name"
+                  className="form-control"
+                  validators={{
+                    minLength: minLength(2),
+                    maxLength: maxLength(15),
+                    required,
+                  }}
+                ></Control.text>
+
+                <Errors
+                
+                model='.author'
+                className="text-danger"
+                show='touched'
+                component='div'
+                messages={{
+                  minLength:'There has to be at least 2 characters',
+                  required: 'This field is required',
+                  maxLength: 'Must be 15 characters or less'
+
+                }}  >
+
+                </Errors>
+              </div>
+
+              <div className="form-group">
+                <Label htmlFor="text">Comment</Label>
+
+                <Control.textarea
+                  model=".text"
+                  name="text"
+                  id="text"
+                  className="form-control"
+                  rows={6}
+                ></Control.textarea>
+              </div>
+
+              <Button type="submit" onClick={this.toggleModal}>Submit</Button>
+            </LocalForm>
+          </ModalBody>
+        </Modal>
+      </div>
+    );
   }
 }
 
