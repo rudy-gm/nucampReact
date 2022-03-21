@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import ReturnArrow from "./ReturnArrowComponent";
 import NextArrow from "./NextArrow";
 import { LocalForm, Control, Errors } from "react-redux-form";
+import { addComment } from "../redux/ActionCreator";
 
 const minLength = (amount) => (value) => {
   return value && value.length >= amount;
@@ -44,7 +45,7 @@ function RenderCampsite({ campsite }) {
   );
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, campsiteId, addComment }) {
   if (comments) {
     return (
       <div className="col-md-5 m-1">
@@ -65,7 +66,7 @@ function RenderComments({ comments }) {
             </div>
           );
         })}
-        <CommentForm></CommentForm>
+        <CommentForm campsiteId={campsiteId} addComment={addComment}></CommentForm>
       </div>
     );
   } else {
@@ -101,7 +102,7 @@ function CampsiteInfo(props) {
         </div>
         <div className="row">
           <RenderCampsite campsite={props.campsite}></RenderCampsite>
-          <RenderComments comments={props.comments}></RenderComments>
+          <RenderComments comments={props.comments} addComment={props.addComment} campsiteId={props.campsite.id}></RenderComments>
         </div>
       </div>
     );
@@ -126,7 +127,8 @@ class CommentForm extends Component {
   };
 
   handleSubmit = (values) => {
-    alert(JSON.stringify(values));
+    this.toggleModal();
+    this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text )
   };
 
   render() {
@@ -204,7 +206,7 @@ class CommentForm extends Component {
                 ></Control.textarea>
               </div>
 
-              <Button type="submit" onClick={this.toggleModal}>Submit</Button>
+              <Button type="submit">Submit</Button>
             </LocalForm>
           </ModalBody>
         </Modal>
