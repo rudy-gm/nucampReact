@@ -17,20 +17,19 @@ import ReturnArrow from "./ReturnArrowComponent";
 import NextArrow from "./NextArrow";
 import { LocalForm, Control, Errors } from "react-redux-form";
 import { addComment } from "../redux/ActionCreator";
+import { Loading } from "./LoadingComponent";
 
 const minLength = (amount) => (value) => {
   return value && value.length >= amount;
 };
 
 const maxLength = (amount) => (value) => {
+  return value && value.length <= amount;
+};
 
-  return value && value.length <= amount
-}
-
-const required = (value) =>{
-
+const required = (value) => {
   return value;
-}
+};
 
 function RenderCampsite({ campsite }) {
   return (
@@ -60,13 +59,15 @@ function RenderComments({ comments, campsiteId, addComment }) {
                 month: "short",
                 day: "2-digit",
               }).format(new Date(Date.parse(singleComment.date)))}
-              
               <br></br>
               <br></br>
             </div>
           );
         })}
-        <CommentForm campsiteId={campsiteId} addComment={addComment}></CommentForm>
+        <CommentForm
+          campsiteId={campsiteId}
+          addComment={addComment}
+        ></CommentForm>
       </div>
     );
   } else {
@@ -79,6 +80,27 @@ function RenderComments({ comments, campsiteId, addComment }) {
 }
 
 function CampsiteInfo(props) {
+  if (props.isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
+      </div>
+    );
+  }
+  if (props.errMess) {
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <h4>{props.errMess}</h4>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (props.campsite) {
     console.log(props.campsite);
     return (
@@ -102,7 +124,11 @@ function CampsiteInfo(props) {
         </div>
         <div className="row">
           <RenderCampsite campsite={props.campsite}></RenderCampsite>
-          <RenderComments comments={props.comments} addComment={props.addComment} campsiteId={props.campsite.id}></RenderComments>
+          <RenderComments
+            comments={props.comments}
+            addComment={props.addComment}
+            campsiteId={props.campsite.id}
+          ></RenderComments>
         </div>
       </div>
     );
@@ -128,7 +154,12 @@ class CommentForm extends Component {
 
   handleSubmit = (values) => {
     this.toggleModal();
-    this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text )
+    this.props.addComment(
+      this.props.campsiteId,
+      values.rating,
+      values.author,
+      values.text
+    );
   };
 
   render() {
@@ -179,19 +210,16 @@ class CommentForm extends Component {
                 ></Control.text>
 
                 <Errors
-                
-                model='.author'
-                className="text-danger"
-                show='touched'
-                component='div'
-                messages={{
-                  minLength:'There has to be at least 2 characters',
-                  required: 'This field is required',
-                  maxLength: 'Must be 15 characters or less'
-
-                }}  >
-
-                </Errors>
+                  model=".author"
+                  className="text-danger"
+                  show="touched"
+                  component="div"
+                  messages={{
+                    minLength: "There has to be at least 2 characters",
+                    required: "This field is required",
+                    maxLength: "Must be 15 characters or less",
+                  }}
+                ></Errors>
               </div>
 
               <div className="form-group">
