@@ -90,30 +90,27 @@ export const addComments = (comments) => ({
   payload: comments,
 });
 
-export const fetchPromotions = () => (dispatch) => {
-  dispatch(promotionsLoading());
+export const fetchPromotions = () => dispatch => {
+    dispatch(promotionsLoading());
 
-  return fetch(baseUrl + "promotions")
-
-    .then( response =>{
-
-        if(response.ok){
-            return response
-        }
-        else{
-            const error = new Error(`Error ${response.status}: ${response.statusText}`)
-            throw error;
-        }
-    },
-    error=>{
-        const errMess = new Error(error.message)
-    }
-    )
-
-
-    .then((response) => response.json())
-    .then((promotions) => dispatch(addPromotions(promotions)))
-    .catch(error => dispatch(promotionsFailed(error.message)));
+    return fetch(baseUrl + 'promotions')
+        .then(response => {
+                if (response.ok) {
+                    return response;
+                } else {
+                    const error = new Error(`Error ${response.status}: ${response.statusText}`);
+                    error.response = response;
+                    throw error;
+                }
+            },
+            error => {
+                const errMess = new Error(error.message);
+                throw errMess;
+            }
+        )
+        .then(response => response.json())
+        .then(promotions => dispatch(addPromotions(promotions)))
+        .catch(error => dispatch(promotionsFailed(error.message)));
 };
 
 export const promotionsLoading = () => ({

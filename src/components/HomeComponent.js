@@ -3,13 +3,13 @@ import { Card, CardImg, CardText, CardBody, CardTitle } from "reactstrap";
 import { Loading } from "./LoadingComponent";
 import {baseUrl} from '../shared/baseUrl'
 
-function RenderCard({ item, isLoading, errMsg }) {
+function RenderCard({ item, isLoading, errMess }) {
   if (isLoading) {
     return <Loading></Loading>;
   }
 
-  if (errMsg) {
-    return <h4>{errMsg}</h4>;
+  if (errMess) {
+    return <h4>{errMess}</h4>;
   }
 
   return (
@@ -31,13 +31,13 @@ function Home(props) {
           <RenderCard
             item={props.campsite}
             isLoading={props.campsitesLoading}
-            errMsg={props.campsitesErrMsg}
+            errMess={props.campsitesErrMess}
           />
         </div>
         <div className="col-md m-1">
           <RenderCard item={props.promotion}
            isLoading={props.promotionLoading}
-           errMess={props.promotionsErrMess} />
+           errMess={props.promotionErrMess} />
         </div>
         <div className="col-md m-1">
           <RenderCard item={props.partner} />
