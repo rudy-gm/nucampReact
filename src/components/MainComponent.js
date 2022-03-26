@@ -15,6 +15,7 @@ import {
   fetchPromotions,
 } from "../redux/ActionCreator";
 import { actions } from "react-redux-form";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 const mapStateToProps = (state) => {
   return {
@@ -88,34 +89,42 @@ class Main extends Component {
     return (
       <div>
         <Header></Header>
-        <Switch>
-          <Route path="/home" component={HomePage}></Route>
-          <Route
-            exact
-            path="/directory"
-            render={() => (
-              <Directory campsites={this.props.campsites}></Directory>
-            )}
-          ></Route>
-          <Route
-            path="/aboutus"
-            render={() => <About partners={this.props.partners}></About>}
-          ></Route>
-          <Route
-            exact
-            path="/contactus"
-            render={() => (
-              <Contact
-                resetFeedbackForm={this.props.resetFeedbackForm}
-              ></Contact>
-            )}
-          ></Route>
-          <Route
-            path="/directory/:campsiteId"
-            component={CampsiteWithId}
-          ></Route>
-          <Redirect to="/home"></Redirect>
-        </Switch>
+        <TransitionGroup>
+          <CSSTransition
+            key={this.props.location.key}
+            classNames="page"
+            timeout={300}
+          >
+            <Switch>
+              <Route path="/home" component={HomePage}></Route>
+              <Route
+                exact
+                path="/directory"
+                render={() => (
+                  <Directory campsites={this.props.campsites}></Directory>
+                )}
+              ></Route>
+              <Route
+                path="/aboutus"
+                render={() => <About partners={this.props.partners}></About>}
+              ></Route>
+              <Route
+                exact
+                path="/contactus"
+                render={() => (
+                  <Contact
+                    resetFeedbackForm={this.props.resetFeedbackForm}
+                  ></Contact>
+                )}
+              ></Route>
+              <Route
+                path="/directory/:campsiteId"
+                component={CampsiteWithId}
+              ></Route>
+              <Redirect to="/home"></Redirect>
+            </Switch>
+          </CSSTransition>
+        </TransitionGroup>
         <Footer></Footer>
       </div>
     );
