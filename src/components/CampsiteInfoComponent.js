@@ -16,7 +16,6 @@ import { Link } from "react-router-dom";
 import ReturnArrow from "./ReturnArrowComponent";
 import NextArrow from "./NextArrow";
 import { LocalForm, Control, Errors } from "react-redux-form";
-import { addComment } from "../redux/ActionCreator";
 import { Loading } from "./LoadingComponent";
 import { baseUrl } from "../shared/baseUrl";
 import { FadeTransform, Fade, Stagger } from "react-animation-components";

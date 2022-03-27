@@ -10,7 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import { Control, Form, Errors } from "react-redux-form";
 
-const required = val => val && val.length;
+const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
 const isNumber = (val) => !isNaN(val);
@@ -40,29 +40,15 @@ class Contact extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  validate(firstName, lastName, phoneNum, email) {
-    const errors = {
-      firstName: "",
-      lastName: "",
-      phoneNum: "",
-      email: "",
-    };
-  }
+  validate(firstName, lastName, phoneNum, email) {}
 
   handleSubmit(values) {
-    console.log("The current state is" + JSON.stringify(values));
-    alert("the current state is" + JSON.stringify(values));
+    this.props.postFeedback(values);
     this.props.resetFeedbackForm();
+
   }
 
   render() {
-    const errors = this.validate(
-      this.state.firstName,
-      this.state.lastName,
-      this.state.phoneNum,
-      this.state.email
-    );
-
     return (
       <div className="container">
         <div className="row">
@@ -111,7 +97,10 @@ class Contact extends Component {
           </div>
 
           <div className="col-md-10">
-            <Form model='feedbackForm' onSubmit={(values) => this.handleSubmit(values)}>
+            <Form
+              model="feedbackForm"
+              onSubmit={(values) => this.handleSubmit(values)}
+            >
               <Row className="form-group">
                 <Label htmlFor="firstName" md={2}>
                   First Name
@@ -199,7 +188,7 @@ class Contact extends Component {
                       required: "Required",
                       minLength: "Must be at least 10 numbers",
                       maxLength: "Must be 15 numbers or less",
-                      isNumber: 'Must be a number'
+                      isNumber: "Must be a number",
                     }}
                   ></Errors>
                 </Col>
@@ -216,17 +205,17 @@ class Contact extends Component {
                     className="form-control"
                     validators={{
                       required,
-                      validEmail
-                    }}  
+                      validEmail,
+                    }}
                   />
                   <Errors
                     className="text-danger"
-                    model='.email'
-                    show='touched'
-                    component='div'
+                    model=".email"
+                    show="touched"
+                    component="div"
                     messages={{
-                      required:'Required',
-                      validEmail: 'Invalid email address'
+                      required: "Required",
+                      validEmail: "Invalid email address",
                     }}
                   ></Errors>
                 </Col>
